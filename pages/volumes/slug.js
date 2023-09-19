@@ -1,27 +1,30 @@
-import Image from "next/image";
 import Link from "next/link";
-import { volumes } from "../../lib/data.js";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import { volumes } from "../../lib/data";
 
 export default function VolumeDetail() {
-  const volumeIndex = volumes.findIndex(
-    ({ slug }) => slug === "the-two-towers"
-  );
+  const router = useRouter();
+  const { slug } = router.query;
 
-  const volume = volumes[volumeIndex];
-  const nextVolume = volumes[volumeIndex + 1];
-  const previousVolume = volumes[volumeIndex - 1];
+  const volume = volumes.find((volume) => volume.slug === slug);
 
   if (!volume) {
-    return null;
+    return <p>Volume not found</p>;
   }
+
+  const volumeIndex = volumes.findIndex((volume) => volume.slug === slug);
+  const nextVolume = volumes[volumeIndex + 1];
+  const previousVolume = volumes[volumeIndex - 1];
 
   const { title, description, cover, books } = volume;
 
   return (
-    <>
+    <div>
       <Link href="/volumes">← All Volumes</Link>
       <h1>{title}</h1>
       <p>{description}</p>
+      <h2>Books in this Volume</h2>
       <ul>
         {books.map(({ ordinal, title }) => (
           <li key={title}>
@@ -36,19 +39,19 @@ export default function VolumeDetail() {
         height={230}
       />
       <div>
-        {previousVolume ? (
+        {previousVolume && (
           <Link href={`/volumes/${previousVolume.slug}`}>
             ← Previous Volume: {previousVolume.title}
           </Link>
-        ) : null}
+        )}
       </div>
       <div>
-        {nextVolume ? (
+        {nextVolume && (
           <Link href={`/volumes/${nextVolume.slug}`}>
             Next Volume: {nextVolume.title} →
           </Link>
-        ) : null}
+        )}
       </div>
-    </>
+    </div>
   );
 }
