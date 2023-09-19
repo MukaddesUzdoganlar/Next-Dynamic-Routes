@@ -41,7 +41,7 @@ export default function VolumeDetail() {
       <div>
         {previousVolume && (
           <Link href={`/volumes/${previousVolume.slug}`}>
-            ← Previous Volume: {previousVolume.title}
+            Previous Volume: {previousVolume.title}
           </Link>
         )}
       </div>
